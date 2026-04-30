@@ -16,7 +16,7 @@ function Login() {
     }
 
     try {
-      const res = await fetch("shubhsah-production.up.railway.app", {
+      const res = await fetch("https://shubhsah-production.up.railway.app", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

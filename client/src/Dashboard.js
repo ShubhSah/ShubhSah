@@ -14,7 +14,7 @@ function Dashboard() {
 
   // 🔄 Fetch users
   const fetchUsers = () => {
-    fetch("shubhsah-production.up.railway.app")
+    fetch("https://shubhsah-production.up.railway.app")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
