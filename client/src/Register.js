@@ -17,13 +17,16 @@ function Register() {
     }
 
     try {
-      const res = await fetch("https://shubhsah-production.up.railway.app", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const res = await fetch(
+        "https://shubhsah-production.up.railway.app/register", // ✅ FIX
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       const data = await res.text();
 
@@ -42,7 +45,6 @@ function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-r from-blue-400 to-purple-500">
-
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
 
         <h2 className="text-2xl font-bold text-center mb-6">

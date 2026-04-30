@@ -14,7 +14,7 @@ function Dashboard() {
 
   // 🔄 Fetch users
   const fetchUsers = () => {
-    fetch("https://shubhsah-production.up.railway.app")
+    fetch("https://shubhsah-production.up.railway.app/users")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -34,7 +34,7 @@ function Dashboard() {
       return;
     }
 
-    await fetch("http://localhost:5000/add-user", {
+    await fetch("https://shubhsah-production.up.railway.app/add-user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ function Dashboard() {
 
   // ✏️ Update User
   const handleUpdate = async () => {
-    await fetch(`http://localhost:5000/update-user/${editId}`, {
+    await fetch(`https://shubhsah-production.up.railway.app/update-user/${editId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ function Dashboard() {
 
   // ❌ Delete User
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:5000/delete-user/${id}`, {
+    await fetch(`https://shubhsah-production.up.railway.app/delete-user/${id}`, {
       method: "DELETE",
     });
 
