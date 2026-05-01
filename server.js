@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+// 🔥 ERROR HANDLING (TOP ME)
 process.on("uncaughtException", (err) => {
   console.log("Uncaught Exception:", err);
 });
@@ -16,16 +17,14 @@ const bcrypt = require("bcrypt");
 
 const app = express();
 
-// ✅ CORS (important)
+// ✅ CORS
 app.use(cors({
   origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
 }));
 
 app.use(express.json());
 
-// 🔐 Middleware (Protected Route)
+// 🔐 Middleware
 const verifyToken = (req, res, next) => {
   const token = req.headers["authorization"];
 
@@ -43,20 +42,25 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-// 🏠 HOME ROUTE
+// 🏠 ROOT ROUTE (IMPORTANT)
 app.get("/", (req, res) => {
   res.send("Server is running 🚀");
 });
 
-// 📝 REGISTER API
+// 🧪 TEST ROUTE (DEBUG KE LIYE)
+app.get("/test", (req, res) => {
+  res.send("Test working ✅");
+});
+
+// 📝 REGISTER
 app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
-    return res.status(400).send("All fields required ❌");
-  }
-
   try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).send("All fields required ❌");
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
@@ -68,13 +72,14 @@ app.post("/register", async (req, res) => {
       }
       res.send("User Registered ✅");
     });
+
   } catch (err) {
     console.log(err);
     res.status(500).send("Server error ❌");
   }
 });
 
-// 🔑 LOGIN API
+// 🔑 LOGIN
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -109,16 +114,14 @@ app.post("/login", (req, res) => {
   });
 });
 
-// 🔐 PROTECTED ROUTE
+// 🔐 PROTECTED
 app.get("/dashboard", verifyToken, (req, res) => {
   res.send(`Welcome ${req.user.email} 🎉`);
 });
 
-// 📊 GET USERS
+// 📊 USERS
 app.get("/users", (req, res) => {
-  const sql = "SELECT id, name, email FROM users";
-
-  db.query(sql, (err, result) => {
+  db.query("SELECT id, name, email FROM users", (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send("DB error ❌");
@@ -127,28 +130,26 @@ app.get("/users", (req, res) => {
   });
 });
 
-// ➕ ADD USER
+// ➕ ADD
 app.post("/add-user", (req, res) => {
   const { name, email } = req.body;
 
-  const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-
-  db.query(sql, [name, email, "123"], (err) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send("DB error ❌");
+  db.query(
+    "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+    [name, email, "123"],
+    (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("DB error ❌");
+      }
+      res.send("User Added ✅");
     }
-    res.send("User Added ✅");
-  });
+  );
 });
 
-// ❌ DELETE USER
+// ❌ DELETE
 app.delete("/delete-user/:id", (req, res) => {
-  const id = req.params.id;
-
-  const sql = "DELETE FROM users WHERE id=?";
-
-  db.query(sql, [id], (err) => {
+  db.query("DELETE FROM users WHERE id=?", [req.params.id], (err) => {
     if (err) {
       console.log(err);
       return res.status(500).send("DB error ❌");
@@ -157,23 +158,24 @@ app.delete("/delete-user/:id", (req, res) => {
   });
 });
 
-// ✏️ UPDATE USER
+// ✏️ UPDATE
 app.put("/update-user/:id", (req, res) => {
-  const id = req.params.id;
   const { name, email } = req.body;
 
-  const sql = "UPDATE users SET name=?, email=? WHERE id=?";
-
-  db.query(sql, [name, email, id], (err) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send("DB error ❌");
+  db.query(
+    "UPDATE users SET name=?, email=? WHERE id=?",
+    [name, email, req.params.id],
+    (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("DB error ❌");
+      }
+      res.send("User Updated ✅");
     }
-    res.send("User Updated ✅");
-  });
+  );
 });
 
-// 🚀 SERVER START (IMPORTANT FIX)
+// 🚀 SERVER START
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
