@@ -2,6 +2,14 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+process.on("uncaughtException", (err) => {
+  console.log("Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log("Unhandled Rejection:", err);
+});
+
 const db = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
